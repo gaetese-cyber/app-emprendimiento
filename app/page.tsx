@@ -394,8 +394,8 @@ export default function Home() {
                 zona={datos.zona}
                 localPropio={datos.localPropio}
               />
-              <CalculadoraPrecio ideaElegida={ideaElegida} zona={datos.zona} />
-              <PuntoEquilibrio ideaElegida={ideaElegida} capital={datos.capital} />
+              <CalculadoraPrecio />
+              <PuntoEquilibrio />
               <ResumenFinal
                 ideaElegida={ideaElegida}
                 capital={datos.capital}
