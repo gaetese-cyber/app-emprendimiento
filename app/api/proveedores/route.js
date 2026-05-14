@@ -1,6 +1,11 @@
-import Groq from "groq-sdk";
+import { getGroq } from "@/app/lib/groq-client";
+import { ProveedoresRequestSchema } from "@/app/lib/schemas";
+import {
+  checkRateLimit,
+  getClientIp,
+  rateLimitedResponse,
+} from "@/app/lib/rate-limit";
 
-const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 function extraerMarca(intereses) {
   const marcaMatch = intereses.match(/\b(?:marca|brand)\s+([A-Za-záéíóúñÁÉÍÓÚÑ0-9]+)/i);
@@ -53,8 +58,23 @@ async function fetchProveedoresML(intereses) {
 }
 
 export async function POST(request) {
+  const ip = getClientIp(request);
+  const rl = checkRateLimit("proveedores", ip, 5, 60_000);
+  if (!rl.ok) return rateLimitedResponse(rl.retryAfter);
+
+  let body;
   try {
-    const { zona, intereses } = await request.json();
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Cuerpo inválido" }, { status: 400 });
+  }
+  const parsed = ProveedoresRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    return Response.json({ error: "Datos inválidos" }, { status: 400 });
+  }
+
+  try {
+    const { zona, intereses } = parsed.data;
 
     const marca = extraerMarca(intereses);
     const provML = await fetchProveedoresML(intereses);
@@ -64,9 +84,10 @@ export async function POST(request) {
         "\n"
       : "\n(No se encontraron resultados en MercadoLibre para este rubro)\n";
 
-    const stream = await client.chat.completions.create({
+    const stream = await getGroq().chat.completions.create({
       model: "llama-3.3-70b-versatile",
       stream: true,
+      max_tokens: 2000,
       messages: [
         {
           role: "user",

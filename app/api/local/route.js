@@ -1,6 +1,11 @@
-import Groq from "groq-sdk";
+import { getGroq } from "@/app/lib/groq-client";
+import { LocalRequestSchema } from "@/app/lib/schemas";
+import {
+  checkRateLimit,
+  getClientIp,
+  rateLimitedResponse,
+} from "@/app/lib/rate-limit";
 
-const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 async function fetchAlquileresML(zona) {
   try {
@@ -40,8 +45,23 @@ async function fetchAlquileresML(zona) {
 }
 
 export async function POST(request) {
+  const ip = getClientIp(request);
+  const rl = checkRateLimit("local", ip, 5, 60_000);
+  if (!rl.ok) return rateLimitedResponse(rl.retryAfter);
+
+  let body;
   try {
-    const { zona, intereses, localPropio } = await request.json();
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Cuerpo inválido" }, { status: 400 });
+  }
+  const parsed = LocalRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    return Response.json({ error: "Datos inválidos" }, { status: 400 });
+  }
+
+  try {
+    const { zona, intereses, localPropio } = parsed.data;
 
     const alquileres = localPropio !== "si" ? await fetchAlquileresML(zona) : [];
     const alquileresTexto = alquileres.length > 0
@@ -50,9 +70,10 @@ export async function POST(request) {
         "\n\nIMPORTANTE: Los precios en USD son dólares estadounidenses. En Argentina los locales comerciales suelen publicarse en dólares. Al convertir a pesos argentinos usá un tipo de cambio realista (consultá el valor actual del dólar). Mostrá los precios en la moneda original y también el equivalente en pesos.\n"
       : "\n⚠️ NO SE ENCONTRARON PRECIOS REALES EN MERCADOLIBRE PARA ESTA ZONA. Por lo tanto, NO des estimaciones de costos de alquiler ya que no tenés datos reales. En cambio, indicale al usuario que use los links de Zonaprop, Argenprop y ML Inmuebles que aparecen en la sección de arriba para consultar los precios actuales en su zona antes de hacer cualquier cálculo.\n";
 
-    const stream = await client.chat.completions.create({
+    const stream = await getGroq().chat.completions.create({
       model: "llama-3.3-70b-versatile",
       stream: true,
+      max_tokens: 1800,
       messages: [
         {
           role: "user",

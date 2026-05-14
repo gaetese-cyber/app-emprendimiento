@@ -1,6 +1,11 @@
-import Groq from "groq-sdk";
+import { getGroq } from "@/app/lib/groq-client";
+import { IdeasRequestSchema } from "@/app/lib/schemas";
+import {
+  checkRateLimit,
+  getClientIp,
+  rateLimitedResponse,
+} from "@/app/lib/rate-limit";
 
-const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 async function fetchPreciosML(intereses) {
   try {
@@ -44,8 +49,23 @@ async function fetchPreciosML(intereses) {
 }
 
 export async function POST(request) {
+  const ip = getClientIp(request);
+  const rl = checkRateLimit("ideas", ip, 5, 60_000);
+  if (!rl.ok) return rateLimitedResponse(rl.retryAfter);
+
+  let body;
   try {
-    const { capital, zona, intereses, localPropio, modalidad, horasDiarias } = await request.json();
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Cuerpo inválido" }, { status: 400 });
+  }
+  const parsed = IdeasRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    return Response.json({ error: "Datos inválidos" }, { status: 400 });
+  }
+
+  try {
+    const { capital, zona, intereses, localPropio, modalidad, horasDiarias } = parsed.data;
 
     const modalidadTexto =
       modalidad === "solo" ? "trabaja solo" :
@@ -59,9 +79,10 @@ export async function POST(request) {
         "\n\nUsá estos precios como referencia real para estimar los costos de inversión. Si hay precios de mayoristas, priorizalos para calcular el stock inicial.\n"
       : "\n(No se encontraron precios en MercadoLibre para este rubro, usá tus conocimientos del mercado argentino 2026)\n";
 
-    const stream = await client.chat.completions.create({
+    const stream = await getGroq().chat.completions.create({
       model: "llama-3.3-70b-versatile",
       stream: true,
+      max_tokens: 1500,
       messages: [
         {
           role: "user",

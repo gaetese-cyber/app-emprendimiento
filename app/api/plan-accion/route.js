@@ -1,14 +1,35 @@
-import Groq from "groq-sdk";
+import { getGroq } from "@/app/lib/groq-client";
+import { PlanRequestSchema } from "@/app/lib/schemas";
+import {
+  checkRateLimit,
+  getClientIp,
+  rateLimitedResponse,
+} from "@/app/lib/rate-limit";
 
-const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function POST(request) {
-  try {
-    const { zona, ideaElegida, capital, localPropio } = await request.json();
+  const ip = getClientIp(request);
+  const rl = checkRateLimit("plan-accion", ip, 5, 60_000);
+  if (!rl.ok) return rateLimitedResponse(rl.retryAfter);
 
-    const stream = await client.chat.completions.create({
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Cuerpo inválido" }, { status: 400 });
+  }
+  const parsed = PlanRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    return Response.json({ error: "Datos inválidos" }, { status: 400 });
+  }
+
+  try {
+    const { zona, ideaElegida, capital, localPropio } = parsed.data;
+
+    const stream = await getGroq().chat.completions.create({
       model: "llama-3.3-70b-versatile",
       stream: true,
+      max_tokens: 1800,
       messages: [
         {
           role: "user",
