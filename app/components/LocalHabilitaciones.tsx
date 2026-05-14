@@ -29,19 +29,19 @@ function buildLinks(zona: string) {
     {
       nombre: "Zonaprop",
       url: `https://www.zonaprop.com.ar/locales-comerciales-alquiler-${ciudadNorm}.html`,
-      color: "bg-blue-600",
+      color: "bg-navy",
       icon: "🏠",
     },
     {
       nombre: "Argenprop",
       url: `https://www.argenprop.com/local-en-alquiler?q=${encodeURIComponent(ciudadRaw)}`,
-      color: "bg-orange-500",
+      color: "bg-earth",
       icon: "🏢",
     },
     {
       nombre: "ML Inmuebles",
       url: `https://inmuebles.mercadolibre.com.ar/alquiler/local-comercial/${ciudadNorm}/`,
-      color: "bg-yellow-500",
+      color: "bg-earth",
       icon: "🔑",
     },
   ];
@@ -84,10 +84,10 @@ export default function LocalHabilitaciones({ zona, intereses, localPropio }: Pr
   const links = buildLinks(zona);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className="bg-bone rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2.5">
-        <div className="w-7 h-7 bg-amber-100 rounded-lg grid place-items-center">
-          <svg className="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <div className="w-7 h-7 bg-earth/10 rounded-lg grid place-items-center">
+          <svg className="w-4 h-4 text-earth" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
         </div>
@@ -115,7 +115,7 @@ export default function LocalHabilitaciones({ zona, intereses, localPropio }: Pr
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex items-center gap-1.5 ${link.color} text-white text-xs font-semibold px-3 py-2 rounded-lg hover:opacity-90 transition`}
+                  className={`flex items-center gap-1.5 ${link.color} text-cream text-xs font-semibold px-3 py-2 rounded-lg hover:opacity-90 transition`}
                 >
                   <span>{link.icon}</span>
                   {link.nombre}
@@ -136,7 +136,7 @@ export default function LocalHabilitaciones({ zona, intereses, localPropio }: Pr
           <button
             onClick={generar}
             disabled={cargando}
-            className="bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold py-3 rounded-xl transition disabled:opacity-50 flex items-center justify-center gap-2"
+            className="bg-earth hover:bg-earth text-cream text-sm font-semibold py-3 rounded-xl transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {cargando ? (
               <>
@@ -159,7 +159,7 @@ export default function LocalHabilitaciones({ zona, intereses, localPropio }: Pr
           <div>
             {generado && (
               <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="w-2 h-2 rounded-full bg-bottle" />
                 <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Información generada</span>
               </div>
             )}
@@ -168,7 +168,7 @@ export default function LocalHabilitaciones({ zona, intereses, localPropio }: Pr
               dangerouslySetInnerHTML={{ __html: marked(contenido) as string }}
             />
             {cargando && contenido && (
-              <span className="inline-block w-0.5 h-4 bg-amber-500 animate-pulse ml-0.5 align-middle" />
+              <span className="inline-block w-0.5 h-4 bg-earth animate-pulse ml-0.5 align-middle" />
             )}
           </div>
         )}

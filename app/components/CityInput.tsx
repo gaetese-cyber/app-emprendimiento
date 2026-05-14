@@ -169,12 +169,12 @@ export default function CityInput({ value, onChange, className }: Props) {
         autoComplete="off"
       />
       {open && filtered.length > 0 && (
-        <ul className="absolute z-20 top-full mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden">
+        <ul className="absolute z-20 top-full mt-1 w-full bg-bone border border-slate-200 rounded-xl shadow-lg overflow-hidden">
           {filtered.map((city) => (
             <li
               key={city}
               onMouseDown={() => select(city)}
-              className="px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition"
+              className="px-4 py-2.5 text-sm text-slate-700 hover:bg-navy/10 hover:text-navy cursor-pointer transition"
             >
               {city}
             </li>

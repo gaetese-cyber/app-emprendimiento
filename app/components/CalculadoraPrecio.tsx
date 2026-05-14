@@ -36,10 +36,10 @@ export default function CalculadoraPrecio() {
     setResultado({ precioSinIva, precioConIva, ganancia, margenReal: m });
   }
 
-  const inputClass = "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition";
+  const inputClass = "w-full bg-cream/40 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bottle/30 focus:border-navy/30 transition";
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className="bg-bone rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2.5">
         <div className="w-7 h-7 bg-teal-100 rounded-lg grid place-items-center">
           <svg className="w-4 h-4 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -84,8 +84,8 @@ export default function CalculadoraPrecio() {
                 onClick={() => setFacturacion(op.val as typeof facturacion)}
                 className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold border transition ${
                   facturacion === op.val
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-slate-50 text-slate-600 border-slate-200 hover:border-blue-300"
+                    ? "bg-navy text-cream border-navy/30"
+                    : "bg-cream/40 text-slate-600 border-slate-200 hover:border-navy/30"
                 }`}
               >
                 {op.label}
@@ -97,14 +97,14 @@ export default function CalculadoraPrecio() {
             {facturacion === "mono" && "Monotributo: pagás una cuota fija mensual. No cobrás IVA extra a tus clientes."}
             {facturacion === "ri" && "Responsable Inscripto: le sumás 21% de IVA al precio. Tenés que declararlo a AFIP."}
           </p>
-          <p className="text-xs text-blue-500 mt-1">¿No sabés cuál sos? Si estás empezando, probablemente Monotributo. Consultá con un contador.</p>
+          <p className="text-xs text-navy mt-1">¿No sabés cuál sos? Si estás empezando, probablemente Monotributo. Consultá con un contador.</p>
         </div>
 
         {error && <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>}
 
         <button
           onClick={calcular}
-          className="bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold py-3 rounded-xl transition flex items-center justify-center gap-2"
+          className="bg-teal-600 hover:bg-teal-700 text-cream text-sm font-semibold py-3 rounded-xl transition flex items-center justify-center gap-2"
         >
           Calcular precio de venta
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -125,11 +125,11 @@ export default function CalculadoraPrecio() {
             <div className="border-t border-teal-200" />
 
             <div className="grid grid-cols-2 gap-3 text-center">
-              <div className="bg-white rounded-lg p-3">
+              <div className="bg-bone rounded-lg p-3">
                 <p className="text-xs text-slate-400 mb-1">Tu ganancia por unidad</p>
-                <p className="text-sm font-bold text-emerald-600">{formatPesos(resultado.ganancia)}</p>
+                <p className="text-sm font-bold text-bottle">{formatPesos(resultado.ganancia)}</p>
               </div>
-              <div className="bg-white rounded-lg p-3">
+              <div className="bg-bone rounded-lg p-3">
                 <p className="text-xs text-slate-400 mb-1">Margen aplicado</p>
                 <p className="text-sm font-bold text-slate-800">{resultado.margenReal}%</p>
               </div>

@@ -45,10 +45,10 @@ export default function ProveedoresMarketing({ zona, intereses }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className="bg-bone rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2.5">
-        <div className="w-7 h-7 bg-violet-100 rounded-lg grid place-items-center">
-          <svg className="w-4 h-4 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <div className="w-7 h-7 bg-navy/10 rounded-lg grid place-items-center">
+          <svg className="w-4 h-4 text-navy" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
         </div>
@@ -63,7 +63,7 @@ export default function ProveedoresMarketing({ zona, intereses }: Props) {
           <button
             onClick={generar}
             disabled={cargando}
-            className="bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold py-3 rounded-xl transition disabled:opacity-50 flex items-center justify-center gap-2"
+            className="bg-navy hover:bg-navy-dark text-cream text-sm font-semibold py-3 rounded-xl transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {cargando ? (
               <>
@@ -85,7 +85,7 @@ export default function ProveedoresMarketing({ zona, intereses }: Props) {
           <div>
             {generado && (
               <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="w-2 h-2 rounded-full bg-bottle" />
                 <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Información generada</span>
               </div>
             )}
@@ -94,7 +94,7 @@ export default function ProveedoresMarketing({ zona, intereses }: Props) {
               dangerouslySetInnerHTML={{ __html: marked(contenido) as string }}
             />
             {cargando && contenido && (
-              <span className="inline-block w-0.5 h-4 bg-violet-500 animate-pulse ml-0.5 align-middle" />
+              <span className="inline-block w-0.5 h-4 bg-navy animate-pulse ml-0.5 align-middle" />
             )}
           </div>
         )}
