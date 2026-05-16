@@ -447,12 +447,20 @@ function Landing({ onChat, onForm }: { onChat: () => void; onForm: () => void })
               · Estudio CP Gaete
             </span>
           </div>
-          <a
-            href="#contacto"
-            className="text-xs font-medium text-muted hover:text-navy transition"
-          >
-            Contacto
-          </a>
+          <div className="flex items-center gap-4">
+            <a
+              href="/contador"
+              className="text-xs font-semibold text-bottle hover:text-bottle-dark transition border border-bottle/30 px-3 py-1.5 rounded-lg hover:bg-bottle/5"
+            >
+              Panel Contador →
+            </a>
+            <a
+              href="#contacto"
+              className="text-xs font-medium text-muted hover:text-navy transition"
+            >
+              Contacto
+            </a>
+          </div>
         </div>
       </header>
 
@@ -542,6 +550,31 @@ function Landing({ onChat, onForm }: { onChat: () => void; onForm: () => void })
               <p className="text-muted text-xs leading-relaxed">{desc}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* PANEL CONTADOR */}
+      <section className="px-6 py-10 max-w-4xl mx-auto">
+        <div className="rounded-xl p-8 flex flex-col sm:flex-row items-center gap-6 border" style={{ background: "var(--color-navy)", borderColor: "var(--color-navy-dark)" }}>
+          <div className="flex-1 text-center sm:text-left">
+            <p className="text-xs font-semibold tracking-widest uppercase text-blue-300 mb-2">
+              Para profesionales
+            </p>
+            <h2 className="font-serif text-2xl font-semibold text-white mb-2">
+              ¿Sos contador/a?
+            </h2>
+            <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
+              Accedé al panel profesional con módulos de clientes, facturación AFIP, liquidación de sueldos, contabilidad, peritos y constitución de sociedades.
+            </p>
+          </div>
+          <a
+            href="/contador"
+            className="flex-shrink-0 flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm transition-opacity hover:opacity-90"
+            style={{ background: "white", color: "var(--color-navy)" }}
+          >
+            Abrir panel
+            <ArrowRight className="w-4 h-4" />
+          </a>
         </div>
       </section>
 
